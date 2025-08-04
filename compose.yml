@@ -1,0 +1,247 @@
+name: pms
+
+services:
+  # qBittorrent bittorrent client
+  qbittorrent:
+    image: lscr.io/linuxserver/qbittorrent:latest
+    container_name: pms-qbittorrent
+    restart: unless-stopped
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+      - TORRENTING_PORT=54321
+    ports:
+      - 54321:54321
+    volumes:
+      - qbittorrent-config:/config
+      - ${HOST_DOWNLOADS}:/data/downloads
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.qbittorrent.rule=Host(`qbittorrent.${DOMAIN}`)
+      - traefik.http.routers.qbittorrent.tls.certresolver=cloudflare
+      - traefik.http.services.qbittorrent.loadbalancer.server.port=8080
+      - homepage.group=Downloaders
+      - homepage.name=qBittorrent
+      - homepage.icon=qbittorrent
+      - homepage.href=https://qbittorrent.${DOMAIN}
+      - homepage.widget.type=qbittorrent
+      - homepage.widget.url=https://qbittorrent.${DOMAIN}
+      - homepage.widget.username=${QBITTORRENT_USERNAME}
+      - homepage.widget.password=${QBITTORRENT_PASSWORD}
+
+  # SABnzbd usenet downloader
+  sabnzbd:
+    image: lscr.io/linuxserver/sabnzbd:latest
+    container_name: pms-sabnzbd
+    restart: unless-stopped
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+    volumes:
+      - sabnzbd-config:/config
+      - ${HOST_DOWNLOADS}:/data/downloads
+      - ${HOST_BACKUP}/sabnzbd:/backup
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.sabnzbd.rule=Host(`sabnzbd.${DOMAIN}`)
+      - traefik.http.routers.sabnzbd.tls.certresolver=cloudflare
+      - traefik.http.services.sabnzbd.loadbalancer.server.port=8080
+      - homepage.group=Downloaders
+      - homepage.name=SABnzbd
+      - homepage.icon=sabnzbd
+      - homepage.href=https://sabnzbd.${DOMAIN}
+      - homepage.widget.type=sabnzbd
+      - homepage.widget.url=https://sabnzbd.${DOMAIN}
+      - homepage.widget.key=${SABNZBD_API_KEY}
+
+  # Postgres database
+  postgres:
+    image: postgres:14
+    container_name: pms-postgres
+    restart: unless-stopped
+    environment:
+      - POSTGRES_PASSWORD=${ADMIN_PASSWORD}
+      - TZ=${TZ}
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+
+  # pgAdmin web interface for Postgres
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: pms-pgadmin
+    restart: unless-stopped
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=${ADMIN_EMAIL}
+      - PGADMIN_DEFAULT_PASSWORD=${ADMIN_PASSWORD}
+    volumes:
+      - pgadmin-data:/var/lib/pgadmin
+    depends_on:
+      - postgres
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.pgadmin.rule=Host(`pgadmin.${DOMAIN}`)
+      - traefik.http.routers.pgadmin.tls.certresolver=cloudflare
+
+  # Sonarr TV show manager
+  sonarr:
+    image: lscr.io/linuxserver/sonarr:latest
+    container_name: pms-sonarr
+    restart: unless-stopped
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+    volumes:
+      - sonarr-config:/config
+      - ${HOST_DOWNLOADS}:/data/downloads
+      - ${HOST_MEDIA}/tv:/data/media/tv
+      - ${HOST_BACKUP}/sonarr:/backup
+    depends_on:
+      - postgres
+      - qbittorrent
+      - sabnzbd
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.pms-sonarr.rule=Host(`sonarr.${DOMAIN}`)
+      - traefik.http.routers.pms-sonarr.tls.certresolver=cloudflare
+      - traefik.http.services.pms-sonarr.loadbalancer.server.port=8989
+      - homepage.group=Media
+      - homepage.name=Sonarr
+      - homepage.icon=sonarr
+      - homepage.href=https://sonarr.${DOMAIN}
+      - homepage.widget.type=sonarr
+      - homepage.widget.url=http://pms-sonarr:8989
+      - homepage.widget.key=${SONARR_API_KEY}
+
+  # Radarr movie manager
+  radarr:
+    image: lscr.io/linuxserver/radarr:latest
+    container_name: pms-radarr
+    restart: unless-stopped
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+    volumes:
+      - radarr-config:/config
+      - ${HOST_DOWNLOADS}:/data/downloads
+      - ${HOST_MEDIA}/movies:/data/media/movies
+      - ${HOST_BACKUP}/radarr:/backup
+    depends_on:
+      - postgres
+      - qbittorrent
+      - sabnzbd
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.radarr.rule=Host(`radarr.${DOMAIN}`)
+      - traefik.http.routers.radarr.tls.certresolver=cloudflare
+      - homepage.group=Media
+      - homepage.name=Radarr
+      - homepage.icon=radarr
+      - homepage.href=https://radarr.${DOMAIN}
+      - homepage.widget.type=radarr
+      - homepage.widget.url=http://pms-radarr:7878
+      - homepage.widget.key=${RADARR_API_KEY}
+
+  # Lidarr music manager
+  lidarr:
+    image: lscr.io/linuxserver/lidarr:latest
+    container_name: pms-lidarr
+    restart: unless-stopped
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+    volumes:
+      - lidarr-config:/config
+      - ${HOST_DOWNLOADS}:/data/downloads
+      - ${HOST_MEDIA}/music:/data/media/music
+      - ${HOST_BACKUP}/lidarr:/backup
+    depends_on:
+      - postgres
+      - qbittorrent
+      - sabnzbd
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.lidarr.rule=Host(`lidarr.${DOMAIN}`)
+      - traefik.http.routers.lidarr.tls.certresolver=cloudflare
+      - homepage.group=Media
+      - homepage.name=Lidarr
+      - homepage.icon=lidarr
+      - homepage.href=https://lidarr.${DOMAIN}
+      - homepage.widget.type=lidarr
+      - homepage.widget.url=http://pms-lidarr:8686
+      - homepage.widget.key=${LIDARR_API_KEY}
+
+  # Prowlarr indexer manager
+  prowlarr:
+    image: lscr.io/linuxserver/prowlarr:latest
+    container_name: pms-prowlarr
+    restart: unless-stopped
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+    volumes:
+      - prowlarr-config:/config
+    depends_on:
+      - postgres
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.prowlarr.rule=Host(`prowlarr.${DOMAIN}`)
+      - traefik.http.routers.prowlarr.tls.certresolver=cloudflare
+
+  # Plex media server
+  plex:
+    image: lscr.io/linuxserver/plex:latest
+    container_name: pms-plex
+    restart: unless-stopped
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+      - VERSION=docker
+    ports:
+      - 32400:32400
+    volumes:
+      - plex-config:/config
+      - ${HOST_MEDIA}:/data/media
+      - ${HOST_BACKUP}/plex:/backup
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.pms-plex.rule=Host(`plex.${DOMAIN}`)
+      - traefik.http.routers.pms-plex.tls.certresolver=cloudflare
+      - traefik.http.services.pms-plex.loadbalancer.server.port=32400
+      - homepage.group=Media
+      - homepage.name=Plex
+      - homepage.icon=plex
+      - homepage.href=https://plex.${DOMAIN}
+      - homepage.widget.type=plex
+      - homepage.widget.url=http://pms-plex:32400
+      - homepage.widget.key=${PLEX_SERVER_TOKEN}
+
+networks:
+  default:
+    name: pms
+
+volumes:
+  qbittorrent-config:
+    driver: local
+  sabnzbd-config:
+    driver: local
+  postgres-data:
+    driver: local
+  pgadmin-data:
+    driver: local
+  sonarr-config:
+    driver: local
+  radarr-config:
+    driver: local
+  lidarr-config:
+    driver: local
+  prowlarr-config:
+    driver: local
+  plex-config:
+    driver: local
