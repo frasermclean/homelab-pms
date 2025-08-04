@@ -21,6 +21,14 @@ services:
       - traefik.http.routers.pms-qbittorrent.rule=Host(`qbittorrent.${DOMAIN}`)
       - traefik.http.routers.pms-qbittorrent.tls.certresolver=cloudflare
       - traefik.http.services.pms-qbittorrent.loadbalancer.server.port=8080
+      - homepage.group=Downloaders
+      - homepage.name=qBittorrent
+      - homepage.icon=qbittorrent
+      - homepage.href=https://qbittorrent.${DOMAIN}
+      - homepage.widget.type=qbittorrent
+      - homepage.widget.url=https://pms-qbittorrent:8080
+      - homepage.widget.username=${QBITTORRENT_USERNAME}
+      - homepage.widget.password=${QBITTORRENT_PASSWORD}
 
   # SABnzbd usenet downloader
   sabnzbd:
@@ -40,6 +48,13 @@ services:
       - traefik.http.routers.pms-sabnzbd.rule=Host(`sabnzbd.${DOMAIN}`)
       - traefik.http.routers.pms-sabnzbd.tls.certresolver=cloudflare
       - traefik.http.services.pms-sabnzbd.loadbalancer.server.port=8080
+      - homepage.group=Downloaders
+      - homepage.name=SABnzbd
+      - homepage.icon=sabnzbd
+      - homepage.href=https://sabnzbd.${DOMAIN}
+      - homepage.widget.type=sabnzbd
+      - homepage.widget.url=https://pms-sabnzbd:8080
+      - homepage.widget.key=${SABNZBD_API_KEY}
 
   # Postgres database
   postgres:
