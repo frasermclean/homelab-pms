@@ -18,9 +18,9 @@ services:
       - ${HOST_DOWNLOADS}:/data/downloads
     labels:
       - traefik.enable=true
-      - traefik.http.routers.qbittorrent.rule=Host(`qbittorrent.${DOMAIN}`)
-      - traefik.http.routers.qbittorrent.tls.certresolver=cloudflare
-      - traefik.http.services.qbittorrent.loadbalancer.server.port=8080
+      - traefik.http.routers.pms-qbittorrent.rule=Host(`qbittorrent.${DOMAIN}`)
+      - traefik.http.routers.pms-qbittorrent.tls.certresolver=cloudflare
+      - traefik.http.services.pms-qbittorrent.loadbalancer.server.port=8080
 
   # SABnzbd usenet downloader
   sabnzbd:
@@ -37,9 +37,9 @@ services:
       - ${HOST_BACKUP}/sabnzbd:/backup
     labels:
       - traefik.enable=true
-      - traefik.http.routers.sabnzbd.rule=Host(`sabnzbd.${DOMAIN}`)
-      - traefik.http.routers.sabnzbd.tls.certresolver=cloudflare
-      - traefik.http.services.sabnzbd.loadbalancer.server.port=8080
+      - traefik.http.routers.pms-sabnzbd.rule=Host(`sabnzbd.${DOMAIN}`)
+      - traefik.http.routers.pms-sabnzbd.tls.certresolver=cloudflare
+      - traefik.http.services.pms-sabnzbd.loadbalancer.server.port=8080
 
   # Postgres database
   postgres:
@@ -66,8 +66,8 @@ services:
       - postgres
     labels:
       - traefik.enable=true
-      - traefik.http.routers.pgadmin.rule=Host(`pgadmin.${DOMAIN}`)
-      - traefik.http.routers.pgadmin.tls.certresolver=cloudflare
+      - traefik.http.routers.pms-pgadmin.rule=Host(`pgadmin.${DOMAIN}`)
+      - traefik.http.routers.pms-pgadmin.tls.certresolver=cloudflare
 
   # Sonarr TV show manager
   sonarr:
@@ -113,8 +113,8 @@ services:
       - sabnzbd
     labels:
       - traefik.enable=true
-      - traefik.http.routers.radarr.rule=Host(`radarr.${DOMAIN}`)
-      - traefik.http.routers.radarr.tls.certresolver=cloudflare
+      - traefik.http.routers.pms-radarr.rule=Host(`radarr.${DOMAIN}`)
+      - traefik.http.routers.pms-radarr.tls.certresolver=cloudflare
 
   # Lidarr music manager
   lidarr:
@@ -136,8 +136,8 @@ services:
       - sabnzbd
     labels:
       - traefik.enable=true
-      - traefik.http.routers.lidarr.rule=Host(`lidarr.${DOMAIN}`)
-      - traefik.http.routers.lidarr.tls.certresolver=cloudflare
+      - traefik.http.routers.pms-lidarr.rule=Host(`lidarr.${DOMAIN}`)
+      - traefik.http.routers.pms-lidarr.tls.certresolver=cloudflare
 
   # Prowlarr indexer manager
   prowlarr:
@@ -154,8 +154,8 @@ services:
       - postgres
     labels:
       - traefik.enable=true
-      - traefik.http.routers.prowlarr.rule=Host(`prowlarr.${DOMAIN}`)
-      - traefik.http.routers.prowlarr.tls.certresolver=cloudflare
+      - traefik.http.routers.pms-prowlarr.rule=Host(`prowlarr.${DOMAIN}`)
+      - traefik.http.routers.pms-prowlarr.tls.certresolver=cloudflare
 
   # Plex media server
   plex:
