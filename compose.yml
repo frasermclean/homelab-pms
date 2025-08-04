@@ -23,6 +23,7 @@ services:
       - traefik.http.services.pms-qbittorrent.loadbalancer.server.port=8080
       - homepage.group=Downloaders
       - homepage.name=qBittorrent
+      - homepage.description=BitTorrent client
       - homepage.icon=qbittorrent
       - homepage.href=https://qbittorrent.${DOMAIN}
       - homepage.widget.type=qbittorrent
@@ -50,6 +51,7 @@ services:
       - traefik.http.services.pms-sabnzbd.loadbalancer.server.port=8080
       - homepage.group=Downloaders
       - homepage.name=SABnzbd
+      - homepage.description=Usenet download manager
       - homepage.icon=sabnzbd
       - homepage.href=https://sabnzbd.${DOMAIN}
       - homepage.widget.type=sabnzbd
