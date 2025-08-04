@@ -109,6 +109,14 @@ services:
       - traefik.http.routers.pms-sonarr.rule=Host(`sonarr.${DOMAIN}`)
       - traefik.http.routers.pms-sonarr.tls.certresolver=cloudflare
       - traefik.http.services.pms-sonarr.loadbalancer.server.port=8989
+      - homepage.group=Media
+      - homepage.name=Sonarr
+      - homepage.description=TV series manager
+      - homepage.icon=sonarr
+      - homepage.href=https://sonarr.${DOMAIN}
+      - homepage.widget.type=sonarr
+      - homepage.widget.url=http://pms-sonarr:8989
+      - homepage.widget.key=${SONARR_API_KEY}
 
   # Radarr movie manager
   radarr:
@@ -132,6 +140,14 @@ services:
       - traefik.enable=true
       - traefik.http.routers.pms-radarr.rule=Host(`radarr.${DOMAIN}`)
       - traefik.http.routers.pms-radarr.tls.certresolver=cloudflare
+      - homepage.group=Media
+      - homepage.name=Radarr
+      - homepage.description=Movie manager
+      - homepage.icon=radarr
+      - homepage.href=https://radarr.${DOMAIN}
+      - homepage.widget.type=radarr
+      - homepage.widget.url=http://pms-radarr:7878
+      - homepage.widget.key=${RADARR_API_KEY}
 
   # Lidarr music manager
   lidarr:
@@ -155,6 +171,14 @@ services:
       - traefik.enable=true
       - traefik.http.routers.pms-lidarr.rule=Host(`lidarr.${DOMAIN}`)
       - traefik.http.routers.pms-lidarr.tls.certresolver=cloudflare
+      - homepage.group=Media
+      - homepage.name=Lidarr
+      - homepage.description=Music manager
+      - homepage.icon=lidarr
+      - homepage.href=https://lidarr.${DOMAIN}
+      - homepage.widget.type=lidarr
+      - homepage.widget.url=http://pms-lidarr:8686
+      - homepage.widget.key=${LIDARR_API_KEY}
 
   # Prowlarr indexer manager
   prowlarr:
