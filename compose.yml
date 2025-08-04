@@ -197,6 +197,14 @@ services:
       - traefik.enable=true
       - traefik.http.routers.pms-prowlarr.rule=Host(`prowlarr.${DOMAIN}`)
       - traefik.http.routers.pms-prowlarr.tls.certresolver=cloudflare
+      - homepage.group=Downloaders
+      - homepage.name=Prowlarr
+      - homepage.description=Indexer manager
+      - homepage.icon=prowlarr
+      - homepage.href=https://prowlarr.${DOMAIN}
+      - homepage.widget.type=prowlarr
+      - homepage.widget.url=http://pms-prowlarr:9696
+      - homepage.widget.key=${PROWLARR_API_KEY}
 
   # Plex media server
   plex:
