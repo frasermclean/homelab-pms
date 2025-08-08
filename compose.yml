@@ -79,6 +79,7 @@ services:
       - PGADMIN_DEFAULT_PASSWORD=${ADMIN_PASSWORD}
     volumes:
       - pgadmin-data:/var/lib/pgadmin
+      - ${HOST_BACKUP}/pgadmin:/backup
     depends_on:
       - postgres
     labels:
