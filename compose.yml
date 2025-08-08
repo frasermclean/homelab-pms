@@ -97,7 +97,7 @@ services:
       - PGID=${PGID}
       - TZ=${TZ}
     volumes:
-      - sonarr-config:/config
+      - ${HOST_APPDATA}/sonarr:/config
       - ${HOST_DOWNLOADS}:/data/downloads
       - ${HOST_MEDIA}/tv:/data/media/tv
       - ${HOST_BACKUP}/sonarr:/backup
@@ -129,7 +129,7 @@ services:
       - PGID=${PGID}
       - TZ=${TZ}
     volumes:
-      - radarr-config:/config
+      - ${HOST_APPDATA}/radarr:/config
       - ${HOST_DOWNLOADS}:/data/downloads
       - ${HOST_MEDIA}/movies:/data/media/movies
       - ${HOST_BACKUP}/radarr:/backup
@@ -160,7 +160,7 @@ services:
       - PGID=${PGID}
       - TZ=${TZ}
     volumes:
-      - lidarr-config:/config
+      - ${HOST_APPDATA}/lidarr:/config
       - ${HOST_DOWNLOADS}:/data/downloads
       - ${HOST_MEDIA}/music:/data/media/music
       - ${HOST_BACKUP}/lidarr:/backup
@@ -191,7 +191,7 @@ services:
       - PGID=${PGID}
       - TZ=${TZ}
     volumes:
-      - prowlarr-config:/config
+      - ${HOST_APPDATA}/prowlarr:/config
     depends_on:
       - postgres
     labels:
@@ -220,7 +220,7 @@ services:
     ports:
       - 32400:32400
     volumes:
-      - plex-config:/config
+      - ${HOST_APPDATA}/plex:/config
       - ${HOST_MEDIA}:/data/media
       - ${HOST_BACKUP}/plex:/backup
     labels:
@@ -245,14 +245,4 @@ volumes:
   postgres-data:
     driver: local
   pgadmin-data:
-    driver: local
-  sonarr-config:
-    driver: local
-  radarr-config:
-    driver: local
-  lidarr-config:
-    driver: local
-  prowlarr-config:
-    driver: local
-  plex-config:
     driver: local
