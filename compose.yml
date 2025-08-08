@@ -43,7 +43,6 @@ services:
     volumes:
       - ${HOST_APPDATA}/sabnzbd:/config
       - ${HOST_DOWNLOADS}:/data/downloads
-      - ${HOST_BACKUP}/sabnzbd:/backup
     labels:
       - traefik.enable=true
       - traefik.http.routers.pms-sabnzbd.rule=Host(`sabnzbd.${DOMAIN}`)
@@ -100,7 +99,6 @@ services:
       - ${HOST_APPDATA}/sonarr:/config
       - ${HOST_DOWNLOADS}:/data/downloads
       - ${HOST_MEDIA}/tv:/data/media/tv
-      - ${HOST_BACKUP}/sonarr:/backup
     depends_on:
       - postgres
       - qbittorrent
@@ -132,7 +130,6 @@ services:
       - ${HOST_APPDATA}/radarr:/config
       - ${HOST_DOWNLOADS}:/data/downloads
       - ${HOST_MEDIA}/movies:/data/media/movies
-      - ${HOST_BACKUP}/radarr:/backup
     depends_on:
       - postgres
       - qbittorrent
@@ -163,7 +160,6 @@ services:
       - ${HOST_APPDATA}/lidarr:/config
       - ${HOST_DOWNLOADS}:/data/downloads
       - ${HOST_MEDIA}/music:/data/media/music
-      - ${HOST_BACKUP}/lidarr:/backup
     depends_on:
       - postgres
       - qbittorrent
@@ -222,7 +218,6 @@ services:
     volumes:
       - ${HOST_APPDATA}/plex:/config
       - ${HOST_MEDIA}:/data/media
-      - ${HOST_BACKUP}/plex:/backup
     labels:
       - traefik.enable=true
       - traefik.http.routers.pms-plex.rule=Host(`plex.${DOMAIN}`)
