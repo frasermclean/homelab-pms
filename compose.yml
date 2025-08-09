@@ -67,6 +67,7 @@ services:
       - TZ=${TZ}
     volumes:
       - postgres-data:/var/lib/postgresql/data
+      - ${HOST_BACKUP}/postgres:/backup
 
   # Sonarr TV show manager
   sonarr:
