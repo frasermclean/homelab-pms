@@ -78,6 +78,9 @@ services:
       - PUID=${PUID}
       - PGID=${PGID}
       - TZ=${TZ}
+    networks:
+      - default
+      - core
     volumes:
       - ${HOST_APPDATA}/sonarr:/config
       - ${HOST_DOWNLOADS}:/data/downloads
@@ -218,6 +221,8 @@ services:
 networks:
   default:
     name: pms
+  core:
+    external: true
 
 volumes:
   postgres-data:
