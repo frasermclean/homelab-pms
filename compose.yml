@@ -74,7 +74,6 @@ services:
       - ${HOST_DOWNLOADS}:/data/downloads
       - ${HOST_MEDIA}/tv:/data/media/tv
     depends_on:
-      - postgres
       - qbittorrent
       - sabnzbd
     labels:
@@ -108,7 +107,6 @@ services:
       - ${HOST_DOWNLOADS}:/data/downloads
       - ${HOST_MEDIA}/movies:/data/media/movies
     depends_on:
-      - postgres
       - qbittorrent
       - sabnzbd
     labels:
@@ -141,7 +139,6 @@ services:
       - ${HOST_DOWNLOADS}:/data/downloads
       - ${HOST_MEDIA}/music:/data/media/music
     depends_on:
-      - postgres
       - qbittorrent
       - sabnzbd
     labels:
@@ -172,7 +169,8 @@ services:
     volumes:
       - ${HOST_APPDATA}/prowlarr:/config
     depends_on:
-      - postgres
+      - qbittorrent
+      - sabnzbd
     labels:
       - traefik.enable=true
       - traefik.http.routers.pms-prowlarr.rule=Host(`prowlarr.${DOMAIN}`)
@@ -220,9 +218,3 @@ networks:
     name: pms
   core:
     external: true
-
-volumes:
-  postgres-data:
-    driver: local
-  pgadmin-data:
-    driver: local
