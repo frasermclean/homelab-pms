@@ -172,6 +172,29 @@ services:
       - homepage.widget.url=http://pms-prowlarr:9696
       - homepage.widget.key=${PROWLARR_API_KEY}
 
+  overseerr:
+    image: lscr.io/linuxserver/overseerr:latest
+    container_name: pms-overseerr
+    restart: unless-stopped
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+    volumes:
+      - ${HOST_APPDATA}/overseerr:/config
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.overseerr.rule=Host(`overseerr.${DOMAIN}`)
+      - traefik.http.routers.overseerr.tls.certresolver=cloudflare
+      - homepage.group=Media
+      - homepage.name=Overseerr
+      - homepage.description=Media request management
+      - homepage.icon=overseerr
+      - homepage.href=https://overseerr.${DOMAIN}
+      - homepage.widget.type=overseerr
+      - homepage.widget.url=http://pms-overseerr:5055
+      - homepage.widget.key=${OVERSEERR_API_KEY}
+
   # Plex media server
   plex:
     image: lscr.io/linuxserver/plex:latest
